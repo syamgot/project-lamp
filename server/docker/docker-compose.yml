@@ -1,0 +1,42 @@
+version: "2"
+services:
+
+  db:
+    build: ./db
+    environment:
+      MYSQL_ROOT_PASSWORD: password
+    volumes:
+      - ../logs/db:/var/log/mysql
+      - ../data:/var/lib/mysql
+    ports:
+      - "3306:3306"
+    container_name: db
+
+  web1:
+    build: ./web
+    environment:
+      - VIRTUAL_HOST=web1.loalhost
+    ports:
+      - "60001:80"
+    links:
+      - db
+    volumes:
+      - ../../workspace/src:/var/www/html
+      - ../logs/web1:/var/log/apache2
+    working_dir: /var/www/html
+    container_name: web1
+
+  web2:
+    build: ./web
+    environment:
+      - VIRTUAL_HOST=web2.loalhost
+    ports:
+      - "60002:80"
+    links:
+      - db
+    volumes:
+      - ../../workspace/src:/var/www/html
+      - ../logs/web2:/var/log/apache2
+    working_dir: /var/www/html
+    container_name: web2
+

@@ -1,7 +1,6 @@
 FROM php:7.0-apache
 
 COPY php.ini /usr/local/etc/php/php.ini
-COPY vhost.conf /etc/apache2/sites-available/000-default.conf
 
 RUN apt-get update && apt-get install -y \
 	zlib1g-dev \
