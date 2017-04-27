@@ -5,35 +5,29 @@ services:
   db:
     build: ./server/docker/db
     environment:
-      MYSQL_ROOT_PASSWORD: password
+      - TZ=JST-9
+      - MYSQL_ALLOW_EMPTY_PASSWORD=yes
+#     - MYSQL_ROOT_PASSWORD=password
+#     - MYSQL_USER: foo
+#     - MYSQL_PASSWORD: bar
+#     - MYSQL_DATABASE=testdb
     ports:
-      - "3306:3306"
+      - "60000:3306"
     volumes:
       - ./server/logs/db:/var/log/mysql
       - ./server/data:/var/lib/mysql
+      - ./workspace/ddl:/docker-entrypoint-initdb.d
     container_name: db
 
-  web1:
+  web:
     build: ./server/docker/web
     environment:
-      - VIRTUAL_HOST=web1.loalhost
+      - TZ=JST-9
+      - VIRTUAL_HOST=web.loalhost
     ports:
       - "60001:80"
     volumes:
       - ./workspace/src:/var/www/html
-      - ./server/logs/web1:/var/log/apache2
+      - ./server/logs/web:/var/log/apache2
     working_dir: /var/www/html
-    container_name: web1
-
-  web2:
-    build: ./server/docker/web
-    environment:
-      - VIRTUAL_HOST=web2.loalhost
-    ports:
-      - "60002:80"
-    volumes:
-      - ./workspace/src:/var/www/html
-      - ./server/logs/web2:/var/log/apache2
-    working_dir: /var/www/html
-    container_name: web2
-
+    container_name: web
